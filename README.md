@@ -95,6 +95,10 @@ roslaunch six explorer.launch
   ```bash
   roslaunch six office.launch
   ```
+- **Sau khi mo ban do thi chay gmapping:**  
+  ```bash
+  roslaunch six gmapping.launch
+  ```
 
 #### b. Khám phá tự động:
 
