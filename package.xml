@@ -27,7 +27,10 @@ for six robot</p>
   <depend>roslaunch</depend>
   <depend>tf</depend>
   <depend>std_msgs</depend>
-
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <depend>sensor_msgs</depend>
   <export>
     <architecture_independent />
     <gazebo_ros gazebo_media_path="${prefix}"/>

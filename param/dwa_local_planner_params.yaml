@@ -1,0 +1,26 @@
+DWAPlannerROS:
+  max_vel_x: 1.0  # Reduce forward speed for tighter control
+  min_vel_x: 0.1  # Avoid completely stopping
+  max_vel_theta: 3.5  # Allow faster turns
+  min_vel_theta: 0.2  # Avoid sharp stops during rotation
+
+  acc_lim_x: 2.0  # Allow reasonable acceleration
+  acc_lim_theta: 12.0  # Allow reasonable angular acceleration
+
+  xy_goal_tolerance: 0.2  # Relax XY goal tolerance
+  yaw_goal_tolerance: 0.4  # Relax yaw tolerance
+  latch_xy_goal_tolerance: false
+
+  path_distance_bias: 15.0  # Prioritize staying on the global path
+  goal_distance_bias: 20.0  # Prioritize reaching the goal
+  occdist_scale: 0.01  # Reduce sensitivity to obstacles
+
+  forward_point_distance: 0.3  # Look slightly ahead on the path
+  stop_time_buffer: 0.2
+  scaling_speed: 0.25
+  max_scaling_factor: 0.2
+
+  sim_time: 2.0  # Increase simulation time for better trajectory generation
+  vx_samples: 20  # Increase linear velocity samples
+  vy_samples: 0  # Disable lateral velocity for differential drive robots
+  vth_samples: 40  # Increase angular velocity samples

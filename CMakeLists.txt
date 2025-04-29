@@ -21,17 +21,25 @@ catkin_package(
   nav_msgs
   tf
 )
+catkin_install_python(PROGRAMS
+  scripts/test.py
+  scripts/test_1.py
+  scripts/test_2.py
+  scripts/test_3.py
+
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-foreach(dir config launch meshes urdf)
+foreach(dir config launch meshes urdf scripts)
   install(DIRECTORY ${dir}/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
 endforeach(dir)
 
-install(DIRECTORY launch models worlds 
+install(DIRECTORY launch models worlds scripts param
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
