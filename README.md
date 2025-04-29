@@ -66,6 +66,11 @@ roslaunch six explorer.launch
 
 #### a. Khởi chạy bản đồ:
 
+  - **Small House:**  
+  ```bash
+  roslaunch six small_house.launch
+---
+
 - **Bookstore:**  
   ```bash
   roslaunch six bookstore.launch
@@ -97,7 +102,12 @@ roslaunch six explorer.launch
 rosrun six test_1.py
 ```
 
----
+### 3. Chạy Navigation:
+
+```bash
+roslaunch six six_navigation.launch
+```
+
 
 ## 📌 Ghi chú
 
