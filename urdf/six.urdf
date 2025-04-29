@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter
+ -->
+<robot
+  name="six">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.0119090912083531 8.4984409054404E-05 0.0423942810406298"
+        rpy="0 0 0" />
+      <mass
+        value="105.564993059326" />
+      <inertia
+        ixx="4.20513009209965"
+        ixy="0.0134358395892136"
+        ixz="-0.194865924125848"
+        iyy="11.0601963023685"
+        iyz="-0.00511185176563676"
+        izz="13.454262276326" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="l">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="link_rb">
+    <inertial>
+      <origin
+        xyz="-1.52166612643612E-11 0.0499994312484847 -2.53794728288792E-11"
+        rpy="0 0 0" />
+      <mass
+        value="6.86394677263579" />
+      <inertia
+        ixx="0.0486340780001551"
+        ixy="8.94936539307187E-12"
+        ixz="8.63565720978465E-12"
+        iyy="0.0869593911567191"
+        iyz="2.8145540103692E-11"
+        izz="0.0486340780038043" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_rb.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_rb.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_rb"
+    type="continuous">
+    <origin
+      xyz="-0.4486 -0.39992 -0.030718"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link_rb" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="link_lb">
+    <inertial>
+      <origin
+        xyz="1.25177090914974E-11 -0.0499994312484748 2.54926878218154E-11"
+        rpy="0 0 0" />
+      <mass
+        value="6.86394677267223" />
+      <inertia
+        ixx="0.0486340779941603"
+        ixy="1.00471706054397E-11"
+        ixz="4.20028396768673E-12"
+        iyy="0.0869593911579852"
+        iyz="2.33574040253059E-11"
+        izz="0.0486340780096409" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_lb.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_lb.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_lb"
+    type="continuous">
+    <origin
+      xyz="-0.4486 0.40008 -0.030718"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link_lb" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="link_rf">
+    <inertial>
+      <origin
+        xyz="2.88922219482401E-11 0.0499994312485906 3.73488739935368E-12"
+        rpy="0 0 0" />
+      <mass
+        value="6.86394677264213" />
+      <inertia
+        ixx="0.0486340780109953"
+        ixy="-2.88614034703621E-11"
+        ixz="-1.18281906759627E-12"
+        iyy="0.0869593911566334"
+        iyz="-7.25300719216216E-12"
+        izz="0.0486340779925056" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_rf.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_rf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_rf"
+    type="continuous">
+    <origin
+      xyz="0.3914 -0.39992 -0.030718"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link_rf" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="link_lf">
+    <inertial>
+      <origin
+        xyz="1.1845247005482E-11 -0.0499994312484017 2.59869417651437E-11"
+        rpy="0 0 0" />
+      <mass
+        value="6.86394677267259" />
+      <inertia
+        ixx="0.0486340779946045"
+        ixy="1.01004933890448E-11"
+        ixz="4.01302156450457E-12"
+        iyy="0.0869593911582054"
+        iyz="2.21907287031965E-11"
+        izz="0.0486340780094871" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_lf.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://six/meshes/link_lf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_lf"
+    type="continuous">
+    <origin
+      xyz="0.3914 0.40008 -0.030718"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link_lf" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+    <!-- Link cho LIDAR -->
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.1"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.05" length="0.1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0 0 0.19" rpy="0 0 0"/>
+  </joint>
+  <gazebo reference="lidar_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <!-- Plugin Skid-Steer Drive -->
+  <gazebo>
+    <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+      <updateRate>100.0</updateRate>
+      <robotNamespace>/</robotNamespace>
+      <leftFrontJoint>joint_lf</leftFrontJoint>
+      <rightFrontJoint>joint_rf</rightFrontJoint>
+      <leftRearJoint>joint_lb</leftRearJoint>
+      <rightRearJoint>joint_rb</rightRearJoint>
+      <wheelSeparation>2.0</wheelSeparation>
+      <wheelDiameter>0.5</wheelDiameter>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <torque>200</torque>
+      <topicName>cmd_vel</topicName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <broadcastTF>false</broadcastTF>
+    </plugin>
+  </gazebo>
+
+  <!-- Plugin IMU -->
+  <gazebo reference="base_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>20.0</update_rate>
+      <pose>0 0 0 0 -1.5708 0</pose>
+      <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+        <topicName>imu/data</topicName>
+        <frameName>base_link</frameName>
+        <gaussianNoise>0.0</gaussianNoise>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- Cảm biến LIDAR -->
+  <gazebo reference="lidar_link">
+    <sensor type="ray" name="lidar_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>180</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14</min_angle>
+            <max_angle>3.14</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.8</min>
+          <max>20.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_laser" filename="libgazebo_ros_laser.so">
+        <topicName>/scan</topicName>
+        <frameName>lidar_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- Plugin Joint State Publisher -->
+  <gazebo>
+    <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+      <robotNamespace>/</robotNamespace>
+      <updateRate>100.0</updateRate>
+      <jointName>joint_rf, joint_lf, joint_rb, joint_lb</jointName>
+      <topicName>/joint_states</topicName>
+    </plugin>
+  </gazebo>
+
+  <!-- Plugin Diff Drive (tuỳ chọn nếu muốn thay thế Skid-Steer) -->
+  <gazebo>
+    <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <leftJoint>joint_lb</leftJoint>
+      <rightJoint>joint_rb</rightJoint>
+      <wheelSeparation>2.0</wheelSeparation>
+      <wheelDiameter>0.5</wheelDiameter>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <odomTopic>/odom</odomTopic>
+      <publishWheelTF>false</publishWheelTF>
+      <publishOdomTF>true</publishOdomTF>
+    </plugin>
+  </gazebo>
+  <gazebo>
+  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <rosNamespace></rosNamespace>
+    <commandTopic>cmd_vel</commandTopic>
+    <odometryTopic>odom</odometryTopic>
+    <odometryFrame>odom</odometryFrame>
+    <robotBaseFrame>base_link</robotBaseFrame>
+    <publishWheelTF>false</publishWheelTF>
+    <publishWheelJointState>false</publishWheelJointState>
+    <legacyMode>false</legacyMode>
+    <wheelSeparation>0.4</wheelSeparation>
+    <wheelDiameter>0.2</wheelDiameter>
+    <broadcastTF>1</broadcastTF>
+    <updateRate>100.0</updateRate>
+  </plugin>
+</gazebo>
+</robot>

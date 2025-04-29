@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <!-- Thêm ánh sáng mặt trời -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- Thêm mặt đất -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- Thêm mô hình map_park -->
+    <include>
+      <uri>model://map_park</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+  </world>
+</sdf>
+

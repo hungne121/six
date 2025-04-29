@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- Thêm model của cậu -->
+    <include>
+      <uri>model://map_heart_prison</uri>
+      <scale> 3.0 3.0 3.0</scale>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>
