@@ -1,132 +1,170 @@
 #!/usr/bin/env python3
 
-import random
 import rospy
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Twist
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib import SimpleActionClient
-from nav_msgs.msg import OccupancyGrid
-import time
+from nav_msgs.msg import OccupancyGrid  # Add this import
+from sensor_msgs.msg import LaserScan
 import tf
 from math import pi, atan2, sqrt
 
-class RandomExplorer:
+
+
+class FrontierExplorer:
     def __init__(self):
-        rospy.init_node("random_explorer")
+        rospy.init_node('frontier_explorer', anonymous=False)
 
-        # Initialize the SimpleActionClient for move_base
-        self.move_base_client = SimpleActionClient('move_base', MoveBaseAction)
+        self.move_base_client = SimpleActionClient('/move_base', MoveBaseAction)
+        rospy.loginfo("Waiting for move_base action server...")
         self.move_base_client.wait_for_server()
+        rospy.loginfo("Connected to move_base server!")
 
-        # Subscribe to the costmap and map
+        self.cmd_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+        self.map_sub = rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
+        self.laser_sub = rospy.Subscriber('/scan', LaserScan, self.laser_callback)
+
         self.map = None
-        rospy.Subscriber("/map", OccupancyGrid, self.map_callback)
+        self.robot_position = None
 
-        # Boundaries for goal generation
-        self.limit_x_p = 9 
-        self.limit_x_n = -5.5
-        self.limit_y_p = 7.3
-        self.limit_y_n = -6.5
-        self.resolution = 0.05  # Example resolution in meters (adjust as needed)
-        self.exploration_interval = 5  # Interval to check for obstacles and find a new goal
-        
-        # Variable to store the previous goal
-        self.last_goal = None
+    def map_callback(self, msg):
+        self.map = msg
 
-    def map_callback(self, data):
-        self.map = data
+    def laser_callback(self, msg):
+        self.laser_data = msg
 
-    def send_goal(self, goal):
-        """Send a goal to the robot and log progress"""
-        if goal is None:
-            rospy.logwarn("No valid goal to send!")
-            return
-
-        goal_msg = PoseStamped()
-        goal_msg.header.frame_id = "map"
-        goal_msg.pose.position.x = goal[0] 
-        goal_msg.pose.position.y = goal[1] 
-        goal_msg.pose.orientation.w = 1.0
-
-        rospy.loginfo(f"Attempting to send goal: {goal_msg.pose.position.x}, {goal_msg.pose.position.y}")
-        move_goal = MoveBaseGoal()
-        move_goal.target_pose = goal_msg
-
-        self.move_base_client.send_goal(move_goal)
-        rospy.loginfo("Goal sent, waiting for result...")
-
-        self.move_base_client.wait_for_result()
-        result = self.move_base_client.get_result()
-
-        if result:
-            rospy.loginfo("Goal reached successfully!")
-        else:
-            rospy.logwarn("Failed to reach the goal.")
-
-    def generate_random_goal(self):
-        """Generate a random goal within the map boundaries and log the result"""
-        if self.map is None:
-            rospy.logwarn("Map is not yet available.")
+    def get_robot_position(self):
+        # Get the current robot's position using tf
+        listener = tf.TransformListener()
+        try:
+            (trans, rot) = listener.lookupTransform('/map', '/base_link', rospy.Time(0))
+            return trans[0], trans[1]
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             return None
 
-        # Generate a random goal within the specified bounds
-        goal_x = random.uniform(self.limit_x_n, self.limit_x_p)
-        goal_y = random.uniform(self.limit_y_n, self.limit_y_p)
+    def detect_frontiers(self):
+        frontiers = []
 
-        rospy.loginfo(f"Generated random goal: ({goal_x}, {goal_y})")
-        return (goal_x, goal_y)
-
-    def check_goal_validity(self, goal):
-        """Check if the goal is valid (unexplored and not too close to walls)"""
         if self.map is None:
-            rospy.logwarn("Map data is not available.")
-            return False
+           return frontiers
 
         width = self.map.info.width
         height = self.map.info.height
-        # Convert (x, y) to map indices
-        x_grid = int((goal[0] - self.map.info.origin.position.x) / self.map.info.resolution)
-        y_grid = int((goal[1] - self.map.info.origin.position.y) / self.map.info.resolution)
+        resolution = self.map.info.resolution
+        origin = self.map.info.origin
+        data = self.map.data
 
-        # Ensure the point is within the bounds
-        if 0 <= x_grid < width and 0 <= y_grid < height:
-            idx = y_grid * width + x_grid
-            if self.map.data[idx] == 0:  # 0 means free
-                # Check if the goal is sufficiently far from the last goal
-                if self.last_goal:
-                    dist = sqrt((goal[0] - self.last_goal[0])**2 + (goal[1] - self.last_goal[1])**2)
-                    if dist < 3.0:  # Minimum distance between goals
-                        rospy.logwarn(f"Goal too close to the last goal ({dist}m). Generating a new goal.")
-                        return False
+        def index(x, y):
+           return x + y * width
 
-                return True
-        rospy.logwarn("Goal is invalid or outside map bounds.")
-        return False
+        for y in range(1, height-1):
+            for x in range(1, width-1):
+                cell_value = data[index(x, y)]
+
+                if cell_value == 0:  # Free space
+                    # Check 8 neighbors
+                    neighbors = [
+                        (x+1, y), (x-1, y), (x, y+1), (x, y-1),
+                        (x+1, y+1), (x-1, y-1), (x+1, y-1), (x-1, y+1)
+                    ]
+
+                    for nx, ny in neighbors:
+                        neighbor_value = data[index(nx, ny)]
+                        if neighbor_value == -1:  # Unknown neighbor
+                            # Found a frontier cell
+                            wx = origin.position.x + (x + 0.5) * resolution
+                            wy = origin.position.y + (y + 0.5) * resolution
+                            frontiers.append((wx, wy))
+                            break  # No need to check other neighbors
+
+        return frontiers
+
+    def explore_frontiers(self):
+        if self.map is None:
+           rospy.loginfo("Waiting for map...")
+           return
+
+        frontiers = self.detect_frontiers()
+        if not frontiers:
+            rospy.loginfo("No frontiers found!")
+            return
+
+        robot_pos = self.get_robot_position()
+        if robot_pos is None:
+            rospy.logwarn("Cannot get robot position.")
+            return
+
+        closest_frontier = min(frontiers, key=lambda f: sqrt((robot_pos[0] - f[0])**2 + (robot_pos[1] - f[1])**2))
+
+        frontier_goal = PoseStamped()
+        frontier_goal.header.frame_id = "map"
+        frontier_goal.pose.position.x = closest_frontier[0]
+        frontier_goal.pose.position.y = closest_frontier[1]
+        frontier_goal.pose.orientation.w = 1.0
+
+        rospy.loginfo(f"Sending frontier goal: ({closest_frontier[0]:.2f}, {closest_frontier[1]:.2f})")
+
+        self.send_goal_to_movebase(frontier_goal)
+
+    def is_goal_valid(self, pose):
+        if self.map is None:
+            rospy.logwarn("No map received yet, assuming goal is valid.")
+            return True
+
+        map_x = int((pose.position.x - self.map.info.origin.position.x) / self.map.info.resolution)
+        map_y = int((pose.position.y - self.map.info.origin.position.y) / self.map.info.resolution)
+
+        index = map_y * self.map.info.width + map_x
+
+        if index < 0 or index >= len(self.map.data):
+            rospy.logwarn("Goal is out of map bounds!")
+            return False
+
+        cost = self.map.data[index]
+
+        if cost == -1:
+            rospy.logwarn("Goal is in an unknown area, not validated yet.")
+            return True  # Still allow, because you're *exploring*
+
+        if cost >= 50:
+            rospy.logwarn("Goal is in an occupied space or too close to an obstacle!")
+            return False
+
+        return True
+
+    def send_goal_to_movebase(self, goal):
+        move_goal = MoveBaseGoal()
+        move_goal.target_pose = goal
+
+        rospy.loginfo("Sending goal to move_base")
+
+        self.move_base_client.send_goal(move_goal)
+
+        rate = rospy.Rate(2)  # 2 Hz check while moving
+        while not rospy.is_shutdown():
+            state = self.move_base_client.get_state()
+
+            if state == 3:  # Goal reached
+               rospy.loginfo("Goal reached!")
+               break
+            elif state == 4 or state == 5:  # Aborted or rejected
+               rospy.logwarn("Goal was aborted or rejected by move_base.")
+               break
+
+            if not self.is_goal_valid(goal.pose):
+               rospy.logwarn("Goal became invalid while navigating! Cancelling...")
+               self.move_base_client.cancel_goal()
+               break
+
+            rate.sleep()
+
 
     def run(self):
-        """Run the explorer"""
-        rospy.loginfo("Random Explorer started!")
-
+        rate = rospy.Rate(1)  # 1 Hz
         while not rospy.is_shutdown():
-            rospy.loginfo("Generating a new random goal...")
+            self.explore_frontiers()
+            rate.sleep()
 
-            goal = self.generate_random_goal()
-
-            if not goal:
-                continue
-
-            if self.check_goal_validity(goal):
-                rospy.loginfo(f"Sending goal: {goal}")
-                self.send_goal(goal)
-                
-                # Store the current goal as the last goal
-                self.last_goal = goal
-            else:
-                rospy.logwarn("Goal invalid, trying again...")
-
-            rospy.loginfo(f"Waiting for {self.exploration_interval} seconds before generating next goal.")
-            time.sleep(self.exploration_interval)
-
-if __name__ == "__main__":
-    explorer = RandomExplorer()
+if __name__ == '__main__':
+    explorer = FrontierExplorer()
     explorer.run()
