@@ -30,7 +30,7 @@
 1. Clone kho lưu trữ:
 
    ```bash
-   git clone https://github.com/hungne121/six.git
+   git clone https://github.com/hungne121/six.
    ```
 
 2. Cài đặt TEB.:
